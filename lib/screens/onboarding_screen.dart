@@ -1,8 +1,22 @@
 import 'package:ekart/screens/LoginScreen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'HomeScreen/home_Screen.dart';
+
+String userUid, user;
 
 class OnBoardingScreen extends StatelessWidget {
+  Future getUid() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    userUid = sharedPreferences.getString("uid");
+    user = sharedPreferences.getString("userEmail");
+    print(userUid);
+    print(user);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -24,12 +38,22 @@ class OnBoardingScreen extends StatelessWidget {
               activeShape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12))),
           onDone: () {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (_) => LoginScreen()));
+            getUid().whenComplete(() {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) =>
+                          userUid == null ? LoginScreen() : HomeScreen()));
+            });
           },
           onSkip: () {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (_) => LoginScreen()));
+            getUid().whenComplete(() {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) =>
+                          userUid == null ? LoginScreen() : HomeScreen()));
+            });
           },
           skip: Text("Skip"),
           showSkipButton: true,
