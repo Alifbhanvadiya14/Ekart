@@ -1,6 +1,7 @@
 # ekart
 
-A new Flutter project.
+A Fully Functional Ecommerce Application with backend in Flutter and firebase.
+
 
 ## Getting Started
 
