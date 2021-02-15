@@ -12,4 +12,20 @@ class FirebaseOperations with ChangeNotifier {
         .doc(Provider.of<Authentication>(context, listen: false).getUserUid)
         .set(data);
   }
+
+  Future fetchTrendingData(String collection) async {
+    QuerySnapshot querySnapshot = await _firebaseFirestore
+        .collection(collection)
+        .where("Trending", isEqualTo: true)
+        .get();
+
+    return querySnapshot.docs;
+  }
+
+  Future fetchProducts(String collection) async {
+    QuerySnapshot querySnapshot =
+        await _firebaseFirestore.collection(collection).get();
+
+    return querySnapshot.docs;
+  }
 }
