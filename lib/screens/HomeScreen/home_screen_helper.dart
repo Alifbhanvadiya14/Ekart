@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ekart/screens/HomeScreen/product_Category.dart';
 import 'package:ekart/services/firebase_operation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreenHelper {
+  List texts = [
+    "Electronics",
+    "Mobile",
+    "Appliances",
+    "Fashion",
+    "Home",
+    "Beauty"
+  ];
+
   List images = [
     "assets/category/electronic.png",
     "assets/category/mobiles.png",
@@ -20,13 +30,28 @@ class HomeScreenHelper {
       scrollDirection: Axis.horizontal,
       itemCount: images.length,
       itemBuilder: (context, index) {
-        return Container(
-          padding: EdgeInsets.only(left: 4),
-          height: 110,
-          width: 80,
-          child: Image.asset(
-            images[index],
-            fit: BoxFit.cover,
+        return Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => CategoryProduct(
+                    category: texts[index],
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              //color: Colors.red,
+              height: 110,
+              width: 80,
+              child: Image.asset(
+                images[index],
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
         );
       },
@@ -77,7 +102,10 @@ class HomeScreenHelper {
                           Icon(FontAwesomeIcons.rupeeSign, size: 16),
                           Text(
                             snapshot.data[index].data()["Price"].toString(),
-                            style: TextStyle(color: Colors.black, fontSize: 18),
+                            style: TextStyle(
+                                color: Colors.red[900],
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600),
                           ),
                         ],
                       ),
@@ -138,8 +166,10 @@ class HomeScreenHelper {
                             Icon(FontAwesomeIcons.rupeeSign, size: 16),
                             Text(
                               documentSnapshot.data()["Price"].toString(),
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 18),
+                              style: TextStyle(
+                                  color: Colors.red[900],
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600),
                             ),
                           ],
                         ),

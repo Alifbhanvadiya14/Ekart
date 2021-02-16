@@ -28,4 +28,13 @@ class FirebaseOperations with ChangeNotifier {
 
     return querySnapshot.docs;
   }
+
+  Future fetchCategoryProducts(String category) async {
+    QuerySnapshot querySnapshot = await _firebaseFirestore
+        .collection("products")
+        .where("Category", isEqualTo: category)
+        .get();
+
+    return querySnapshot.docs;
+  }
 }

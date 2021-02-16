@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      //backgroundColor: Colors.white,
       drawer: Drawer(),
       appBar: AppBar(
         title: Text("Ekart",
@@ -103,11 +103,11 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 "Categories",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
               ),
             ),
             Container(
-              height: MediaQuery.of(context).size.height * 0.08,
+              height: MediaQuery.of(context).size.height * 0.09,
               //color: Colors.red,
               child: HomeScreenHelper().cateogryList(context),
             ),
@@ -115,7 +115,7 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.only(left: 8.0, top: 16),
               child: Text(
                 "Trending Products",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
               ),
             ),
             Padding(
@@ -129,7 +129,7 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: Text(
                 "Products",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
               ),
             ),
             Padding(
