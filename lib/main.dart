@@ -1,5 +1,6 @@
 import 'package:ekart/screens/onboarding_screen.dart';
 import 'package:ekart/services/Auth.dart';
+import 'package:ekart/services/cart_calculation.dart';
 import 'package:ekart/services/firebase_operation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => Authentication()),
         ChangeNotifierProvider(create: (_) => FirebaseOperations()),
+        ChangeNotifierProvider.value(value: CartCalculations())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

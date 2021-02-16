@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ekart/screens/HomeScreen/product_Category.dart';
+import 'package:ekart/screens/ProductDetails/product_details.dart';
 import 'package:ekart/services/firebase_operation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -77,40 +78,52 @@ class HomeScreenHelper {
               child: Container(
                 //color: Colors.red,
                 height: MediaQuery.of(context).size.height * 0.3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.2,
-                      width: 220,
-                      child: Image.network(
-                        snapshot.data[index].data()["Images"][0],
-                        fit: BoxFit.cover,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ProductDetails(
+                          querydocumentSnapshot: snapshot.data[index],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4.0),
-                      child: Text(
-                        snapshot.data[index].data()["Name"],
-                        style: TextStyle(color: Colors.black, fontSize: 18),
+                    );
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        width: 220,
+                        child: Image.network(
+                          snapshot.data[index].data()["Images"][0],
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4.0, top: 4),
-                      child: Row(
-                        children: [
-                          Icon(FontAwesomeIcons.rupeeSign, size: 16),
-                          Text(
-                            snapshot.data[index].data()["Price"].toString(),
-                            style: TextStyle(
-                                color: Colors.red[900],
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text(
+                          snapshot.data[index].data()["Name"],
+                          style: TextStyle(color: Colors.black, fontSize: 18),
+                        ),
                       ),
-                    )
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0, top: 4),
+                        child: Row(
+                          children: [
+                            Icon(FontAwesomeIcons.rupeeSign, size: 16),
+                            Text(
+                              snapshot.data[index].data()["Price"].toString(),
+                              style: TextStyle(
+                                  color: Colors.red[900],
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             );
@@ -138,43 +151,55 @@ class HomeScreenHelper {
                 snapshot.data.docs.map((DocumentSnapshot documentSnapshot) {
               return Padding(
                 padding: const EdgeInsets.all(4.0),
-                child: Container(
-                  //color: Colors.red,
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.15,
-                        child: Image.network(
-                          documentSnapshot.data()["Images"][0],
-                          fit: BoxFit.contain,
-                          width: double.infinity,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ProductDetails(
+                          querydocumentSnapshot: documentSnapshot,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Text(
-                          documentSnapshot.data()["Name"],
-                          style: TextStyle(color: Colors.black, fontSize: 16),
+                    );
+                  },
+                  child: Container(
+                    //color: Colors.red,
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          child: Image.network(
+                            documentSnapshot.data()["Images"][0],
+                            fit: BoxFit.contain,
+                            width: double.infinity,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0, top: 4),
-                        child: Row(
-                          children: [
-                            Icon(FontAwesomeIcons.rupeeSign, size: 16),
-                            Text(
-                              documentSnapshot.data()["Price"].toString(),
-                              style: TextStyle(
-                                  color: Colors.red[900],
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: Text(
+                            documentSnapshot.data()["Name"],
+                            style: TextStyle(color: Colors.black, fontSize: 16),
+                          ),
                         ),
-                      )
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4.0, top: 4),
+                          child: Row(
+                            children: [
+                              Icon(FontAwesomeIcons.rupeeSign, size: 16),
+                              Text(
+                                documentSnapshot.data()["Price"].toString(),
+                                style: TextStyle(
+                                    color: Colors.red[900],
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               );
