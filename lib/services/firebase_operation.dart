@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ekart/screens/onboarding_screen.dart';
 import 'package:ekart/services/Auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -27,5 +28,37 @@ class FirebaseOperations with ChangeNotifier {
         await _firebaseFirestore.collection(collection).get();
 
     return querySnapshot.docs;
+  }
+
+  Future fetchCategoryProducts(String category) async {
+    QuerySnapshot querySnapshot = await _firebaseFirestore
+        .collection("products")
+        .where("Category", isEqualTo: category)
+        .get();
+
+    return querySnapshot.docs;
+  }
+
+  Future submitCartData(String docId, dynamic data) async {
+    return _firebaseFirestore.collection("CartData").doc(docId).set(data);
+  }
+
+  Future fetchCartData(BuildContext context) async {
+    QuerySnapshot _querySnapshot = await _firebaseFirestore
+        .collection("CartData")
+        .where("userUid",
+            isEqualTo: Provider.of<Authentication>(context, listen: false)
+                        .getUserUid ==
+                    null
+                ? userUid
+                : Provider.of<Authentication>(context, listen: false)
+                    .getUserUid)
+        .get();
+
+    return _querySnapshot.docs;
+  }
+
+  Future deleteCartData(BuildContext context, String docId) async {
+    return _firebaseFirestore.collection("CartData").doc(docId).delete();
   }
 }
