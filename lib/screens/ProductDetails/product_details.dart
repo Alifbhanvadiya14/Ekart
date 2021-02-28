@@ -10,8 +10,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-var uid = Uuid();
-String docId = uid.v4();
+var uid;
+String docId;
 
 class ProductDetails extends StatelessWidget {
   final QueryDocumentSnapshot querydocumentSnapshot;
@@ -48,24 +48,28 @@ class ProductDetails extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
-              height: MediaQuery.of(context).size.height / 2.5,
-              width: MediaQuery.of(context).size.width,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Carousel(
-                  images: [
-                    NetworkImage(querydocumentSnapshot.data()["Images"][0]),
-                    NetworkImage(querydocumentSnapshot.data()["Images"][1]),
-                    //NetworkImage(querydocumentSnapshot.data()["Images"][2]),
-                  ],
-                  boxFit: BoxFit.contain,
-                  autoplay: false,
-                  dotBgColor: Colors.transparent,
-                  dotSize: 5.0,
-                  dotSpacing: 15.0,
-                  dotColor: Colors.black,
-                  indicatorBgPadding: 5.0,
+            Hero(
+              transitionOnUserGestures: true,
+              tag: querydocumentSnapshot.data()["ProductId"],
+              child: Container(
+                height: MediaQuery.of(context).size.height / 2.5,
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Carousel(
+                    images: [
+                      NetworkImage(querydocumentSnapshot.data()["Images"][0]),
+                      NetworkImage(querydocumentSnapshot.data()["Images"][1]),
+                      //NetworkImage(querydocumentSnapshot.data()["Images"][2]),
+                    ],
+                    boxFit: BoxFit.contain,
+                    autoplay: false,
+                    dotBgColor: Colors.transparent,
+                    dotSize: 5.0,
+                    dotSpacing: 15.0,
+                    dotColor: Colors.black,
+                    indicatorBgPadding: 5.0,
+                  ),
                 ),
               ),
             ),
@@ -181,6 +185,15 @@ class ProductDetails extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                 onTap: () {
+                  docId = Provider.of<Authentication>(context, listen: false)
+                              .getUserUid ==
+                          null
+                      ? userUid + querydocumentSnapshot.data()["ProductId"]
+                      : Provider.of<Authentication>(context, listen: false)
+                              .getUserUid +
+                          querydocumentSnapshot.data()["ProductId"];
+                  Provider.of<FirebaseOperations>(context, listen: false)
+                      .countCartData(context);
                   Provider.of<FirebaseOperations>(context, listen: false)
                       .submitCartData(docId, {
                     "docId": docId,
@@ -200,9 +213,10 @@ class ProductDetails extends StatelessWidget {
                             .getProductQuantity
                   }).whenComplete(() {
                     final snackBar = SnackBar(
+                      backgroundColor: Theme.of(context).primaryColor,
                       content: Text(
                         "Item Added to Cart",
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(color: Colors.white),
                       ),
                     );
 

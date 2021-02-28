@@ -165,8 +165,7 @@ class _LoginHelperState extends State<LoginHelper> {
                   .whenComplete(() {
                 print(
                     "${Provider.of<Authentication>(context, listen: false).getUser}");
-                emailController.text = "";
-                passwordController.text = "";
+                
                 Navigator.push(
                   context,
                   MaterialPageRoute(

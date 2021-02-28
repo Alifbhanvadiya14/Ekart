@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ekart/services/cart_calculation.dart';
 import 'package:ekart/services/firebase_operation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,33 +10,64 @@ class Cart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("MyCart",
-            style: TextStyle(
-                //color: Colors.black,
-                fontSize: 28,
-                fontWeight: FontWeight.w600)),
+        title: Text(
+          "MyCart",
+          style: TextStyle(
+              //color: Colors.black,
+              fontSize: 28,
+              fontWeight: FontWeight.w600),
+        ),
         centerTitle: true,
         elevation: 0.0,
         //backgroundColor: Colors.white,
         actions: [
           IconButton(icon: Icon(Icons.search), onPressed: () {}),
-          IconButton(
-              icon: Icon(Icons.shopping_cart_outlined), onPressed: () {}),
+          Container(
+            child: Center(
+              child: Stack(
+                children: [
+                  IconButton(icon: Icon(Icons.shopping_cart), onPressed: () {}),
+                  Positioned(
+                    right: 5,
+                    top: 3,
+                    child: Container(
+                      height: 18,
+                      width: 18,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          color: Colors.red),
+                      child: Center(
+                        child: Text(
+                          Provider.of<FirebaseOperations>(context, listen: true)
+                              .getCount
+                              .toString(),
+                          style: TextStyle(
+                              fontSize: 10, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          )
         ],
       ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
+        physics: ScrollPhysics(),
         child: Container(
           height: MediaQuery.of(context).size.height,
           padding: EdgeInsets.only(top: 16),
-          child: FutureBuilder(
-            future: Provider.of<FirebaseOperations>(context, listen: true)
+          child: StreamBuilder<QuerySnapshot>(
+            stream: Provider.of<FirebaseOperations>(context, listen: true)
                 .fetchCartData(context),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
                   child: CircularProgressIndicator(),
                 );
-              } else if (!snapshot.hasData) {
+              } else if (snapshot.data.docs.isEmpty) {
                 return Center(
                   child: Image.asset(
                     "assets/images/empty_shopping_cart.png",
@@ -43,73 +75,75 @@ class Cart extends StatelessWidget {
                 );
               } else {
                 return ListView.builder(
-                  itemCount: snapshot.data.length,
+                  itemCount: snapshot.data.docs.length,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
                         onTap: () {
-                          showSheet(context, snapshot.data[index]);
+                          showSheet(context, snapshot.data.docs[index]);
                         },
                         child: Container(
-                            height: 100,
-                            //color: Colors.red,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: MediaQuery.of(context).size.height / 5,
-                                  height: 100,
-                                  child: Image.network(
-                                    snapshot.data[index].data()["productImage"],
-                                    fit: BoxFit.contain,
+                          height: 100,
+                          //color: Colors.red,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.height / 5,
+                                height: 100,
+                                child: Image.network(
+                                  snapshot.data.docs[index]
+                                      .data()["productImage"],
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 16,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    snapshot.data.docs[index]
+                                        .data()["productName"],
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 18),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 16,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      snapshot.data[index]
-                                          .data()["productName"],
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4),
+                                    child: Row(
+                                      children: [
+                                        Icon(FontAwesomeIcons.rupeeSign,
+                                            color: Colors.red[900], size: 16),
+                                        Text(" "),
+                                        Text(
+                                          snapshot.data.docs[index]
+                                              .data()["productPrice"]
+                                              .toString(),
+                                          style: TextStyle(
+                                              color: Colors.red[900],
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4),
+                                    child: Text(
+                                      "Quantity : ${snapshot.data.docs[index].data()["productQuantity"]}",
                                       style: TextStyle(
-                                          color: Colors.black, fontSize: 18),
+                                          color: Colors.black, fontSize: 14),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 4),
-                                      child: Row(
-                                        children: [
-                                          Icon(FontAwesomeIcons.rupeeSign,
-                                              color: Colors.red[900], size: 16),
-                                          Text(" "),
-                                          Text(
-                                            snapshot.data[index]
-                                                .data()["productPrice"]
-                                                .toString(),
-                                            style: TextStyle(
-                                                color: Colors.red[900],
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 4),
-                                      child: Text(
-                                        "Quantity : ${snapshot.data[index].data()["productQuantity"]}",
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 14),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            )),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                     );
                   },
@@ -122,7 +156,7 @@ class Cart extends StatelessWidget {
     );
   }
 
-  showSheet(BuildContext context, QueryDocumentSnapshot documentSnapshot) {
+  showSheet(BuildContext context, DocumentSnapshot documentSnapshot) {
     return showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -134,17 +168,18 @@ class Cart extends StatelessWidget {
                 Provider.of<FirebaseOperations>(context, listen: false)
                     .deleteCartData(context, documentSnapshot.data()["docId"])
                     .whenComplete(() {
+                  Provider.of<FirebaseOperations>(context, listen: false)
+                      .countCartData(context);
                   Navigator.pop(context);
                   final snackBar = SnackBar(
+                    backgroundColor: Theme.of(context).primaryColor,
                     content: Text(
                       "Item deleted",
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(color: Colors.white),
                     ),
                   );
 
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }).whenComplete(() {
-                  Navigator.pop(context);
                 });
               },
               child: Text("Delete"),

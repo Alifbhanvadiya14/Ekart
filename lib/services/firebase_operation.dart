@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 
 class FirebaseOperations with ChangeNotifier {
   FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  int count = 0;
+  int get getCount => count;
 
   Future createUser(BuildContext context, dynamic data) async {
     return _firebaseFirestore
@@ -43,7 +45,26 @@ class FirebaseOperations with ChangeNotifier {
     return _firebaseFirestore.collection("CartData").doc(docId).set(data);
   }
 
-  Future fetchCartData(BuildContext context) async {
+  Stream<QuerySnapshot> fetchCartData(BuildContext context) {
+    Stream<QuerySnapshot> _querySnapshot = _firebaseFirestore
+        .collection("CartData")
+        .where("userUid",
+            isEqualTo: Provider.of<Authentication>(context, listen: false)
+                        .getUserUid ==
+                    null
+                ? userUid
+                : Provider.of<Authentication>(context, listen: false)
+                    .getUserUid)
+        .snapshots();
+
+    return _querySnapshot;
+  }
+
+  Future deleteCartData(BuildContext context, String docId) async {
+    return _firebaseFirestore.collection("CartData").doc(docId).delete();
+  }
+
+  void countCartData(BuildContext context) async {
     QuerySnapshot _querySnapshot = await _firebaseFirestore
         .collection("CartData")
         .where("userUid",
@@ -54,11 +75,8 @@ class FirebaseOperations with ChangeNotifier {
                 : Provider.of<Authentication>(context, listen: false)
                     .getUserUid)
         .get();
-
-    return _querySnapshot.docs;
-  }
-
-  Future deleteCartData(BuildContext context, String docId) async {
-    return _firebaseFirestore.collection("CartData").doc(docId).delete();
+    print(_querySnapshot.size);
+    count = _querySnapshot.size;
+    notifyListeners();
   }
 }

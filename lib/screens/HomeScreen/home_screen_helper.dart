@@ -75,54 +75,57 @@ class HomeScreenHelper {
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.all(4.0),
-              child: Container(
-                //color: Colors.red,
-                height: MediaQuery.of(context).size.height * 0.3,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ProductDetails(
-                          querydocumentSnapshot: snapshot.data[index],
+              child: Hero(
+                tag: snapshot.data[index].data()["ProductId"],
+                              child: Container(
+                  //color: Colors.red,
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ProductDetails(
+                            querydocumentSnapshot: snapshot.data[index],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.2,
-                        width: 220,
-                        child: Image.network(
-                          snapshot.data[index].data()["Images"][0],
-                          fit: BoxFit.cover,
+                      );
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.2,
+                          width: 220,
+                          child: Image.network(
+                            snapshot.data[index].data()["Images"][0],
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Text(
-                          snapshot.data[index].data()["Name"],
-                          style: TextStyle(color: Colors.black, fontSize: 18),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: Text(
+                            snapshot.data[index].data()["Name"],
+                            style: TextStyle(color: Colors.black, fontSize: 18),
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4.0, top: 4),
-                        child: Row(
-                          children: [
-                            Icon(FontAwesomeIcons.rupeeSign, size: 16),
-                            Text(
-                              snapshot.data[index].data()["Price"].toString(),
-                              style: TextStyle(
-                                  color: Colors.red[900],
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4.0, top: 4),
+                          child: Row(
+                            children: [
+                              Icon(FontAwesomeIcons.rupeeSign, size: 16),
+                              Text(
+                                snapshot.data[index].data()["Price"].toString(),
+                                style: TextStyle(
+                                    color: Colors.red[900],
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
