@@ -8,7 +8,6 @@ import 'package:ekart/services/firebase_operation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 
 var uid;
 String docId;
@@ -33,14 +32,42 @@ class ProductDetails extends StatelessWidget {
         //backgroundColor: Colors.white,
         actions: [
           IconButton(icon: Icon(Icons.search), onPressed: () {}),
-          IconButton(
-              icon: Icon(Icons.shopping_cart_outlined),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => Cart()),
-                );
-              }),
+          Container(
+            child: Center(
+              child: Stack(
+                children: [
+                  IconButton(
+                      icon: Icon(Icons.shopping_cart),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => Cart()),
+                        );
+                      }),
+                  Positioned(
+                    right: 5,
+                    top: 3,
+                    child: Container(
+                      height: 18,
+                      width: 18,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          color: Colors.red),
+                      child: Center(
+                        child: Text(
+                          Provider.of<FirebaseOperations>(context, listen: true)
+                              .getCount
+                              .toString(),
+                          style: TextStyle(
+                              fontSize: 10, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          )
         ],
       ),
       body: SingleChildScrollView(
@@ -214,6 +241,8 @@ class ProductDetails extends StatelessWidget {
                   }).whenComplete(() {
                     final snackBar = SnackBar(
                       backgroundColor: Theme.of(context).primaryColor,
+                      duration: Duration(seconds: 1),
+                      elevation: 3.0,
                       content: Text(
                         "Item Added to Cart",
                         style: TextStyle(color: Colors.white),

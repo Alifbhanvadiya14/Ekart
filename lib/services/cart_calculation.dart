@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-
 class CartCalculations extends ChangeNotifier {
-  int cartData = 0;
-  int get getCartData => cartData;
-
   int productQuantity = 1;
   int get getProductQuantity => productQuantity;
 
@@ -18,19 +14,25 @@ class CartCalculations extends ChangeNotifier {
     notifyListeners();
   }
 
-  // addToCart(BuildContext context, dynamic data, String docId) async {
-  //   cartData++;
-  //   await Provider.of<FirebaseOperations>(context, listen: false)
-  //       .submitCartData(docId, data);
-  //   print(cartData);
-  //   notifyListeners();
-  // }
+  // Future countTotalAmount(BuildContext context) async {
+  //   await _firebaseFirestore
+  //       .collection("CartData")
+  //       .where("userUid",
+  //           isEqualTo: Provider.of<Authentication>(context, listen: false)
+  //                       .getUserUid ==
+  //                   null
+  //               ? userUid
+  //               : Provider.of<Authentication>(context, listen: false)
+  //                   .getUserUid)
+  //       .snapshots()
+  //       .listen((snapshot) {
+  //     snapshot.docs.forEach((doc) {
+  //       totalAmount +=
+  //           (doc.data()["productQuantity"] * doc.data()["productPrice"]);
+  //     });
+  //   });
 
-  // deleteCartItem(BuildContext context, String docId) async {
-  //   await Provider.of<FirebaseOperations>(context, listen: false)
-  //       .deleteCartData(context, docId);
-  //   cartData--;
-  //   print(cartData);
-  //   notifyListeners();
+  //   print(totalAmount);
+  //   return totalAmount;
   // }
 }

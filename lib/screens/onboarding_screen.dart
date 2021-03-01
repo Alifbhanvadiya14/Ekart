@@ -5,16 +5,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'HomeScreen/home_Screen.dart';
 
-String userUid, user;
+String userUid, userEmail;
 
 class OnBoardingScreen extends StatelessWidget {
   Future getUid() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     userUid = sharedPreferences.getString("uid");
-    user = sharedPreferences.getString("userEmail");
+
+    //userEmail = sharedPreferences.getString("userEmail");
     print(userUid);
-    print(user);
+    //print(userEmail);
   }
 
   @override

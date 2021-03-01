@@ -9,11 +9,34 @@ class FirebaseOperations with ChangeNotifier {
   int count = 0;
   int get getCount => count;
 
+  String username = "";
+  String userEmail = "";
+
+  String get getUserEmail => userEmail;
+  String get getUsername => username;
+
+  int categoryLength = 0;
+  int get getCategoryLength => categoryLength;
+
   Future createUser(BuildContext context, dynamic data) async {
     return _firebaseFirestore
         .collection("users")
         .doc(Provider.of<Authentication>(context, listen: false).getUserUid)
         .set(data);
+  }
+
+  Future fetchUserDetails(BuildContext context) async {
+    DocumentSnapshot documentSnapshot = await _firebaseFirestore
+        .collection("users")
+        .doc(Provider.of<Authentication>(context, listen: false).getUserUid ==
+                null
+            ? userUid
+            : Provider.of<Authentication>(context, listen: false).getUserUid)
+        .get();
+
+    username = documentSnapshot.data()["username"];
+    userEmail = documentSnapshot.data()["useremail"];
+    notifyListeners();
   }
 
   Future fetchTrendingData(String collection) async {
@@ -32,13 +55,14 @@ class FirebaseOperations with ChangeNotifier {
     return querySnapshot.docs;
   }
 
-  Future fetchCategoryProducts(String category) async {
-    QuerySnapshot querySnapshot = await _firebaseFirestore
+  Stream<QuerySnapshot> fetchCategoryProduct(
+      BuildContext context, String category) {
+    Stream<QuerySnapshot> _querySnapshot = _firebaseFirestore
         .collection("products")
         .where("Category", isEqualTo: category)
-        .get();
+        .snapshots();
 
-    return querySnapshot.docs;
+    return _querySnapshot;
   }
 
   Future submitCartData(String docId, dynamic data) async {
@@ -77,6 +101,16 @@ class FirebaseOperations with ChangeNotifier {
         .get();
     print(_querySnapshot.size);
     count = _querySnapshot.size;
+    notifyListeners();
+  }
+
+  void countCategoryData(BuildContext context, String category) async {
+    QuerySnapshot _querySnapshot = await _firebaseFirestore
+        .collection("products")
+        .where("Category", isEqualTo: category)
+        .get();
+    print(_querySnapshot.size);
+    categoryLength = _querySnapshot.size;
     notifyListeners();
   }
 }

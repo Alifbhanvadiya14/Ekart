@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ekart/services/cart_calculation.dart';
 import 'package:ekart/services/firebase_operation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,12 +8,16 @@ class Cart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar:
+          Provider.of<FirebaseOperations>(context, listen: true).getCount > 0
+              ? cartButton(context)
+              : SizedBox(),
       appBar: AppBar(
         title: Text(
           "MyCart",
           style: TextStyle(
               //color: Colors.black,
-              fontSize: 28,
+              fontSize: 24,
               fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
@@ -53,7 +56,10 @@ class Cart extends StatelessWidget {
           )
         ],
       ),
-      backgroundColor: Colors.white,
+      backgroundColor:
+          Provider.of<FirebaseOperations>(context, listen: true).getCount > 0
+              ? Colors.grey.shade200
+              : Colors.white,
       body: SingleChildScrollView(
         physics: ScrollPhysics(),
         child: Container(
@@ -75,17 +81,28 @@ class Cart extends StatelessWidget {
                 );
               } else {
                 return ListView.builder(
+                  physics: PageScrollPhysics(),
+                  shrinkWrap: true,
                   itemCount: snapshot.data.docs.length,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(4.0),
                       child: GestureDetector(
                         onTap: () {
                           showSheet(context, snapshot.data.docs[index]);
                         },
                         child: Container(
-                          height: 100,
-                          //color: Colors.red,
+                          height: 110,
+                          decoration: BoxDecoration(
+                            //color: Colors.red,
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 2,
+                                  color: Colors.white,
+                                  spreadRadius: 0),
+                            ],
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,11 +123,14 @@ class Cart extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    snapshot.data.docs[index]
-                                        .data()["productName"],
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 18),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      snapshot.data.docs[index]
+                                          .data()["productName"],
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 18),
+                                    ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 4),
@@ -132,7 +152,7 @@ class Cart extends StatelessWidget {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 4),
+                                    padding: EdgeInsets.only(top: 4),
                                     child: Text(
                                       "Quantity : ${snapshot.data.docs[index].data()["productQuantity"]}",
                                       style: TextStyle(
@@ -172,6 +192,8 @@ class Cart extends StatelessWidget {
                       .countCartData(context);
                   Navigator.pop(context);
                   final snackBar = SnackBar(
+                    elevation: 3.0,
+                    duration: Duration(milliseconds: 50),
                     backgroundColor: Theme.of(context).primaryColor,
                     content: Text(
                       "Item deleted",
@@ -189,4 +211,53 @@ class Cart extends StatelessWidget {
       },
     );
   }
+}
+
+cartButton(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: StreamBuilder<QuerySnapshot>(
+            stream: Provider.of<FirebaseOperations>(context, listen: true)
+                .fetchCartData(context),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                  width: 20,
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return Text(
+                "Total: \n Rs.${snapshot.data.docs.length > 0 ? snapshot.data.docs.map((e) => e.data()["productQuantity"] * e.data()["productPrice"]).reduce((value, element) => value + element).toString() : "0"}",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              );
+            },
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.blue,
+            ),
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: Center(
+              child: Text(
+                "Proceed To CheckOut",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }

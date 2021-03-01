@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => Authentication()),
         ChangeNotifierProvider(create: (_) => FirebaseOperations()),
-        ChangeNotifierProvider.value(value: CartCalculations())
+        ChangeNotifierProvider(create: (_) => CartCalculations())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

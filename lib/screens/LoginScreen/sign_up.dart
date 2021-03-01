@@ -142,7 +142,7 @@ class _SignUpState extends State<SignUp> {
                   onTap: () {
                     Provider.of<Authentication>(context, listen: false)
                         .createAccount(
-                            emailController.text, passwordController.text)
+                            emailController.text, passwordController.text,usernameController.text)
                         .whenComplete(() {
                       if (Provider.of<Authentication>(context, listen: false)
                               .getErrorMessage ==

@@ -1,50 +1,77 @@
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:ekart/screens/CartScreen/cart.dart';
 import 'package:ekart/screens/HomeScreen/home_screen_helper.dart';
-import 'package:ekart/screens/LoginScreen/login_screen.dart';
-import 'package:ekart/services/Auth.dart';
+import 'package:ekart/services/firebase_operation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    Provider.of<FirebaseOperations>(context, listen: false)
+        .fetchUserDetails(context);
+    Provider.of<FirebaseOperations>(context, listen: false)
+        .countCartData(context);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       //backgroundColor: Colors.white,
-      drawer: Drawer(),
+      drawer: HomeScreenHelper().drawerBody(context),
       appBar: AppBar(
-        title: Text("Ekart",
-            style: TextStyle(
-                //color: Colors.black,
-                fontSize: 28,
-                fontWeight: FontWeight.w600)),
+        title: Text(
+          "Ekart",
+          style: TextStyle(
+              //color: Colors.black,
+              fontSize: 28,
+              fontWeight: FontWeight.w600),
+        ),
         centerTitle: true,
         elevation: 0.0,
         //backgroundColor: Colors.white,
         actions: [
-          IconButton(icon: Icon(Icons.search), onPressed: () {}),
-          IconButton(
-            icon: Icon(
-              Icons.logout,
-              //color: Colors.black,
+          Container(
+            child: Center(
+              child: Stack(
+                children: [
+                  IconButton(
+                      icon: Icon(Icons.shopping_cart),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => Cart()),
+                        );
+                      }),
+                  Positioned(
+                    right: 5,
+                    top: 3,
+                    child: Container(
+                      height: 18,
+                      width: 18,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          color: Colors.red),
+                      child: Center(
+                        child: Text(
+                          Provider.of<FirebaseOperations>(context, listen: true)
+                              .getCount
+                              .toString(),
+                          style: TextStyle(
+                              fontSize: 10, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
-            onPressed: () {
-              Provider.of<Authentication>(context, listen: false)
-                  .signOut()
-                  .whenComplete(() async {
-                SharedPreferences sharedPreferences =
-                    await SharedPreferences.getInstance();
-
-                sharedPreferences.remove("uid");
-                sharedPreferences.remove("userEmail");
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => LoginScreen(),
-                  ),
-                );
-              });
-            },
           )
         ],
       ),
@@ -85,8 +112,10 @@ class HomeScreen extends StatelessWidget {
                 child: Carousel(
                   images: [
                     AssetImage("assets/offers/offer_2.jpg"),
+                    AssetImage("assets/images/promotion__one_1.png"),
                     AssetImage("assets/offers/offer_1.jpg"),
-                    AssetImage("assets/offers/offer_3.jpg"),
+                    AssetImage("assets/images/promotion_one.png"),
+                    AssetImage("assets/images/promotion_three.png"),
                   ],
                   boxFit: BoxFit.cover,
                   radius: Radius.circular(12),
@@ -99,20 +128,33 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
+            Divider(
+              height: 10,
+              color: Colors.grey.shade700,
+              thickness: 5,
+            ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(left: 10.0, top: 10),
               child: Text(
                 "Categories",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
               ),
             ),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.09,
-              //color: Colors.red,
-              child: HomeScreenHelper().cateogryList(context),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.09,
+                //color: Colors.red,
+                child: HomeScreenHelper().cateogryList(context),
+              ),
+            ),
+            Divider(
+              height: 10,
+              color: Colors.grey.shade700,
+              thickness: 5,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 8.0, top: 16),
+              padding: const EdgeInsets.only(left: 10.0, top: 16, bottom: 4),
               child: Text(
                 "Trending Products",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
@@ -125,8 +167,13 @@ class HomeScreen extends StatelessWidget {
                 child: HomeScreenHelper().trendingProduct(context),
               ),
             ),
+            Divider(
+              height: 10,
+              color: Colors.grey.shade700,
+              thickness: 5,
+            ),
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.only(left: 10.0, bottom: 4),
               child: Text(
                 "Products",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
