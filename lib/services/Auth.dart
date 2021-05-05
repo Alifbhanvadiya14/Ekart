@@ -9,14 +9,16 @@ class Authentication extends ChangeNotifier {
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
   String userUid;
+
   User userData;
+
   String errorMessage = "";
 
   String get getErrorMessage => errorMessage;
   String get getUserUid => userUid;
   User get getUser => userData;
 
-  Future createAccount(String email, String password) async {
+  Future createAccount(String email, String password, String username) async {
     try {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
@@ -26,8 +28,10 @@ class Authentication extends ChangeNotifier {
 
       User user = userCredential.user;
       userUid = user.uid;
-      userData = user;
+      //username = username;
+
       sharedPreferences.setString("uid", userUid);
+      //sharedPreferences.setString("username", username);
       sharedPreferences.setString("userEmail", userData.email);
       print("User id is $userUid");
       print("User data is $user");
@@ -57,6 +61,7 @@ class Authentication extends ChangeNotifier {
       userUid = user.uid;
       userData = user;
       sharedPreferences.setString("uid", userUid);
+      //sharedPreferences.setString("username", userData.displayName);
       sharedPreferences.setString("userEmail", userData.email);
       print("User id is $userUid");
       //print("User data is $user");
@@ -101,6 +106,7 @@ class Authentication extends ChangeNotifier {
     userData = user;
     userUid = user.uid;
     sharedPreferences.setString("uid", userUid);
+    //sharedPreferences.setString("username", userData.displayName);
     sharedPreferences.setString("userEmail", userData.email);
     //print(user);
     notifyListeners();
