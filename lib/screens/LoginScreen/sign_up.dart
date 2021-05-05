@@ -141,8 +141,8 @@ class _SignUpState extends State<SignUp> {
                 child: GestureDetector(
                   onTap: () {
                     Provider.of<Authentication>(context, listen: false)
-                        .createAccount(
-                            emailController.text, passwordController.text,usernameController.text)
+                        .createAccount(emailController.text,
+                            passwordController.text, usernameController.text)
                         .whenComplete(() {
                       if (Provider.of<Authentication>(context, listen: false)
                               .getErrorMessage ==
@@ -160,7 +160,7 @@ class _SignUpState extends State<SignUp> {
                           emailController.text = "";
                           passwordController.text = "";
                           usernameController.text = "";
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (_) => HomeScreen(),
@@ -236,7 +236,7 @@ class _SignUpState extends State<SignUp> {
                     }).whenComplete(() {
                       print(
                           "${Provider.of<Authentication>(context, listen: false).getUser}");
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (_) => HomeScreen(),

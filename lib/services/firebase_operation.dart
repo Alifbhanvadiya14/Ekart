@@ -9,6 +9,9 @@ class FirebaseOperations with ChangeNotifier {
   int count = 0;
   int get getCount => count;
 
+  int totalAmount = 0;
+  int get getTotalAmount => totalAmount;
+
   String username = "";
   String userEmail = "";
 
@@ -23,6 +26,13 @@ class FirebaseOperations with ChangeNotifier {
         .collection("users")
         .doc(Provider.of<Authentication>(context, listen: false).getUserUid)
         .set(data);
+  }
+
+  Future updateUser(BuildContext context, dynamic data) async {
+    return _firebaseFirestore
+        .collection("users")
+        .doc(Provider.of<Authentication>(context, listen: false).getUserUid)
+        .update(data);
   }
 
   Future fetchUserDetails(BuildContext context) async {
@@ -99,6 +109,12 @@ class FirebaseOperations with ChangeNotifier {
                 : Provider.of<Authentication>(context, listen: false)
                     .getUserUid)
         .get();
+    totalAmount = _querySnapshot.docs.length > 0
+        ? _querySnapshot.docs
+            .map((e) => e.data()["productQuantity"] * e.data()["productPrice"])
+            .reduce((value, element) => value + element)
+        : 0;
+    print(totalAmount);
     print(_querySnapshot.size);
     count = _querySnapshot.size;
     notifyListeners();

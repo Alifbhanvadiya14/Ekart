@@ -77,116 +77,118 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: SingleChildScrollView(
         physics: ScrollPhysics(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.08,
-              color: Theme.of(context).primaryColor,
-              padding: EdgeInsets.all(8),
-              child: TextField(
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.blueGrey,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    hintText: "Search for products",
-                    contentPadding: EdgeInsets.all(6),
-                    hintStyle: TextStyle(color: Colors.blueGrey)),
-              ),
-            ),
-            Container(
-              height: 180.0,
-              width: MediaQuery.of(context).size.width,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Carousel(
-                  images: [
-                    AssetImage("assets/offers/offer_2.jpg"),
-                    AssetImage("assets/images/promotion__one_1.png"),
-                    AssetImage("assets/offers/offer_1.jpg"),
-                    AssetImage("assets/images/promotion_one.png"),
-                    AssetImage("assets/images/promotion_three.png"),
-                  ],
-                  boxFit: BoxFit.cover,
-                  radius: Radius.circular(12),
-                  dotSize: 4.0,
-                  dotSpacing: 15.0,
-                  dotColor: Colors.lightGreenAccent,
-                  indicatorBgPadding: 5.0,
-                  // dotBgColor: Colors.purple.withOpacity(0.5),
-                  borderRadius: true,
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.08,
+                color: Theme.of(context).primaryColor,
+                padding: EdgeInsets.all(8),
+                child: TextField(
+                  decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.blueGrey,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      hintText: "Search for products",
+                      contentPadding: EdgeInsets.all(6),
+                      hintStyle: TextStyle(color: Colors.blueGrey)),
                 ),
               ),
-            ),
-            Divider(
-              height: 10,
-              color: Colors.grey.shade700,
-              thickness: 5,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, top: 10),
-              child: Text(
-                "Categories",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              Container(
+                height: 180.0,
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Carousel(
+                    images: [
+                      AssetImage("assets/offers/offer_2.jpg"),
+                      AssetImage("assets/images/promotion__one_1.png"),
+                      AssetImage("assets/offers/offer_1.jpg"),
+                      AssetImage("assets/images/promotion_one.png"),
+                      AssetImage("assets/images/promotion_three.png"),
+                    ],
+                    boxFit: BoxFit.cover,
+                    radius: Radius.circular(12),
+                    dotSize: 4.0,
+                    dotSpacing: 15.0,
+                    dotColor: Colors.lightGreenAccent,
+                    indicatorBgPadding: 5.0,
+                    // dotBgColor: Colors.purple.withOpacity(0.5),
+                    borderRadius: true,
+                  ),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.09,
-                //color: Colors.red,
-                child: HomeScreenHelper().cateogryList(context),
+              Divider(
+                height: 10,
+                color: Colors.grey.shade700,
+                thickness: 5,
               ),
-            ),
-            Divider(
-              height: 10,
-              color: Colors.grey.shade700,
-              thickness: 5,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, top: 16, bottom: 4),
-              child: Text(
-                "Trending Products",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0, top: 10),
+                child: Text(
+                  "Categories",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.3,
-                child: HomeScreenHelper().trendingProduct(context),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.09,
+                  //color: Colors.red,
+                  child: HomeScreenHelper().cateogryList(context),
+                ),
               ),
-            ),
-            Divider(
-              height: 10,
-              color: Colors.grey.shade700,
-              thickness: 5,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, bottom: 4),
-              child: Text(
-                "Products",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              Divider(
+                height: 10,
+                color: Colors.grey.shade700,
+                thickness: 5,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                child: HomeScreenHelper().productList(context),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0, top: 16, bottom: 4),
+                child: Text(
+                  "Trending Products",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                ),
               ),
-            )
-          ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: HomeScreenHelper().trendingProduct(context),
+                ),
+              ),
+              Divider(
+                height: 10,
+                color: Colors.grey.shade700,
+                thickness: 5,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0, bottom: 4, top: 8),
+                child: Text(
+                  "Products",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: HomeScreenHelper().productList(context),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

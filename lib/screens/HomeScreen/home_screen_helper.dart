@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class HomeScreenHelper {
   List texts = [
@@ -82,64 +83,70 @@ class HomeScreenHelper {
               padding: const EdgeInsets.all(4.0),
               child: Hero(
                 tag: snapshot.data[index].data()["ProductId"],
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFFFFD0),
-                    //color: Colors.red,
-                    boxShadow: [
-                      BoxShadow(
-                          blurRadius: 2,
-                          color: Colors.grey.shade100,
-                          spreadRadius: 0),
-                    ],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => ProductDetails(
-                            querydocumentSnapshot: snapshot.data[index],
-                          ),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.2,
-                          width: 200,
-                          child: Image.network(
-                            snapshot.data[index].data()["Images"][0],
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 4.0),
-                          child: Text(
-                            snapshot.data[index].data()["Name"],
-                            style: TextStyle(color: Colors.black, fontSize: 18),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 4.0, top: 4),
-                          child: Row(
-                            children: [
-                              Icon(FontAwesomeIcons.rupeeSign, size: 16),
-                              Text(
-                                snapshot.data[index].data()["Price"].toString(),
-                                style: TextStyle(
-                                    color: Colors.red[900],
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ],
-                          ),
-                        )
+                child: Card(
+                  margin: EdgeInsets.zero,
+                  //color: Colors.white,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                            blurRadius: 2,
+                            color: Colors.grey.shade100,
+                            spreadRadius: 0),
                       ],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ProductDetails(
+                              querydocumentSnapshot: snapshot.data[index],
+                            ),
+                          ),
+                        );
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.2,
+                            width: 200,
+                            child: Image.network(
+                              snapshot.data[index].data()["Images"][0],
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 4.0),
+                            child: Text(
+                              snapshot.data[index].data()["Name"],
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 18),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 4.0, top: 4),
+                            child: Row(
+                              children: [
+                                Icon(FontAwesomeIcons.rupeeSign, size: 16),
+                                Text(
+                                  snapshot.data[index]
+                                      .data()["Price"]
+                                      .toString(),
+                                  style: TextStyle(
+                                      color: Colors.red[900],
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -172,66 +179,66 @@ class HomeScreenHelper {
                   snapshot.data.docs.map((DocumentSnapshot documentSnapshot) {
                 return Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => ProductDetails(
-                            querydocumentSnapshot: documentSnapshot,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      //color: Colors.red,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFFFFFD0),
+                  child: Card(
+                    margin: EdgeInsets.all(0),
+                    child: GestureDetector(
+                      onTap: () {
+                        context.navigator.push(
+                          ProductDetails(
+                                  querydocumentSnapshot: documentSnapshot)
+                              .vxPreviewRoute(parentContext: context),
+                        );
+                      },
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.2,
                         //color: Colors.red,
-                        boxShadow: [
-                          BoxShadow(
-                              blurRadius: 2,
-                              color: Colors.grey.shade100,
-                              spreadRadius: 0),
-                        ],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      height: MediaQuery.of(context).size.height * 0.2,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.15,
-                            child: Image.network(
-                              documentSnapshot.data()["Images"][0],
-                              fit: BoxFit.contain,
-                              width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 2,
+                                color: Colors.grey.shade100,
+                                spreadRadius: 0),
+                          ],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: MediaQuery.of(context).size.height * 0.15,
+                              child: Image.network(
+                                documentSnapshot.data()["Images"][0],
+                                fit: BoxFit.contain,
+                                width: double.infinity,
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 4.0),
-                            child: Text(
-                              documentSnapshot.data()["Name"],
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 16),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4.0),
+                              child: Text(
+                                documentSnapshot.data()["Name"],
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16),
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 4.0, top: 4),
-                            child: Row(
-                              children: [
-                                Icon(FontAwesomeIcons.rupeeSign, size: 16),
-                                Text(
-                                  documentSnapshot.data()["Price"].toString(),
-                                  style: TextStyle(
-                                      color: Colors.red[900],
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4.0, top: 4),
+                              child: Row(
+                                children: [
+                                  Icon(FontAwesomeIcons.rupeeSign, size: 16),
+                                  Text(
+                                    documentSnapshot.data()["Price"].toString(),
+                                    style: TextStyle(
+                                        color: Colors.red[900],
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -306,8 +313,9 @@ class HomeScreenHelper {
           ),
           InkWell(
             onTap: () {
+              Provider.of<Authentication>(context, listen: false).signOut();
               Provider.of<Authentication>(context, listen: false)
-                  .signOut()
+                  .googleSignOut()
                   .whenComplete(() async {
                 SharedPreferences sharedPreferences =
                     await SharedPreferences.getInstance();
@@ -315,7 +323,7 @@ class HomeScreenHelper {
                 sharedPreferences.remove("uid");
 
                 sharedPreferences.remove("userEmail");
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (_) => LoginScreen(),

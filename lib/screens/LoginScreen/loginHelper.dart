@@ -104,7 +104,7 @@ class _LoginHelperState extends State<LoginHelper> {
                     "") {
                   print(
                       "${Provider.of<Authentication>(context, listen: false).getUser}");
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (_) => HomeScreen(),
@@ -165,8 +165,8 @@ class _LoginHelperState extends State<LoginHelper> {
                   .whenComplete(() {
                 print(
                     "${Provider.of<Authentication>(context, listen: false).getUser}");
-                
-                Navigator.push(
+
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (_) => HomeScreen(),

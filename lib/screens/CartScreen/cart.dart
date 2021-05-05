@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ekart/services/firebase_operation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:velocity_x/velocity_x.dart';
+import 'package:ekart/screens/CartScreen/detailsPage.dart';
 
 class Cart extends StatelessWidget {
   @override
@@ -86,84 +89,118 @@ class Cart extends StatelessWidget {
                   itemCount: snapshot.data.docs.length,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          showSheet(context, snapshot.data.docs[index]);
-                        },
-                        child: Container(
-                          height: 110,
-                          decoration: BoxDecoration(
-                            //color: Colors.red,
-                            boxShadow: [
-                              BoxShadow(
-                                  blurRadius: 2,
-                                  color: Colors.white,
-                                  spreadRadius: 0),
-                            ],
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.height / 5,
-                                height: 100,
-                                child: Image.network(
-                                  snapshot.data.docs[index]
-                                      .data()["productImage"],
-                                  fit: BoxFit.contain,
+                      padding: const EdgeInsets.all(8.0),
+                      child: Slidable(
+                        actionExtentRatio: 0.25,
+                        closeOnScroll: true,
+                        actionPane: SlidableDrawerActionPane(),
+                        child: Card(
+                          child: Container(
+                            height: 120,
+                            decoration: BoxDecoration(
+                              //color: Colors.red,
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 2,
+                                    color: Colors.white,
+                                    spreadRadius: 0),
+                              ],
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: MediaQuery.of(context).size.height / 5,
+                                  height: 100,
+                                  child: Image.network(
+                                    snapshot.data.docs[index]
+                                        .data()["productImage"],
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 16,
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: Text(
-                                      snapshot.data.docs[index]
-                                          .data()["productName"],
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 18),
+                                SizedBox(
+                                  width: 14,
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                        snapshot.data.docs[index]
+                                            .data()["productName"],
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 18),
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4),
-                                    child: Row(
-                                      children: [
-                                        Icon(FontAwesomeIcons.rupeeSign,
-                                            color: Colors.red[900], size: 16),
-                                        Text(" "),
-                                        Text(
-                                          snapshot.data.docs[index]
-                                              .data()["productPrice"]
-                                              .toString(),
-                                          style: TextStyle(
-                                              color: Colors.red[900],
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ],
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 4),
+                                      child: Row(
+                                        children: [
+                                          Icon(FontAwesomeIcons.rupeeSign,
+                                              color: Colors.red[900], size: 16),
+                                          Text(" "),
+                                          Text(
+                                            snapshot.data.docs[index]
+                                                .data()["productPrice"]
+                                                .toString(),
+                                            style: TextStyle(
+                                                color: Colors.red[900],
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 4),
-                                    child: Text(
-                                      "Quantity : ${snapshot.data.docs[index].data()["productQuantity"]}",
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 14),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 4),
+                                      child: Text(
+                                        "Quantity : ${snapshot.data.docs[index].data()["productQuantity"]}",
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 14),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              )
-                            ],
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
+                        secondaryActions: <Widget>[
+                          IconSlideAction(
+                            caption: 'Delete',
+                            color: Colors.red,
+                            icon: Icons.delete,
+                            onTap: () {
+                              Provider.of<FirebaseOperations>(context,
+                                      listen: false)
+                                  .deleteCartData(
+                                      context,
+                                      snapshot.data.docs[index]
+                                          .data()["docId"]);
+                              // .whenComplete(() {
+                              Provider.of<FirebaseOperations>(context,
+                                      listen: false)
+                                  .countCartData(context);
+
+                              final snackBar = SnackBar(
+                                elevation: 3.0,
+                                duration: Duration(seconds: 2),
+                                backgroundColor: Theme.of(context).primaryColor,
+                                content: Text(
+                                  "Item deleted",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              );
+
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            },
+                          ),
+                        ],
                       ),
                     );
                   },
@@ -176,88 +213,75 @@ class Cart extends StatelessWidget {
     );
   }
 
-  showSheet(BuildContext context, DocumentSnapshot documentSnapshot) {
-    return showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.1,
-          child: Center(
-            child: RaisedButton(
-              onPressed: () {
-                Provider.of<FirebaseOperations>(context, listen: false)
-                    .deleteCartData(context, documentSnapshot.data()["docId"])
-                    .whenComplete(() {
-                  Provider.of<FirebaseOperations>(context, listen: false)
-                      .countCartData(context);
-                  Navigator.pop(context);
-                  final snackBar = SnackBar(
-                    elevation: 3.0,
-                    duration: Duration(milliseconds: 50),
-                    backgroundColor: Theme.of(context).primaryColor,
-                    content: Text(
-                      "Item deleted",
-                      style: TextStyle(color: Colors.white),
-                    ),
+  cartButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: Provider.of<FirebaseOperations>(context, listen: true)
+                  .fetchCartData(context),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container(
+                    width: 20,
+                    child: CircularProgressIndicator(),
                   );
-
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                });
+                }
+                return RichText(
+                  text: TextSpan(
+                    text: "Total: \n ",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black),
+                    children: [
+                      TextSpan(
+                        text:
+                            "Rs.${Provider.of<FirebaseOperations>(context, listen: true).getTotalAmount.toString()}",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black),
+                      )
+                    ],
+                  ),
+                );
               },
-              child: Text("Delete"),
             ),
           ),
-        );
-      },
+          Expanded(
+            flex: 2,
+            child: GestureDetector(
+              onTap: () {
+                context.navigator.push(
+                    AddressDetail().vxPreviewRoute(parentContext: context));
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.blue,
+                ),
+                height: 50,
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: Text(
+                    "Proceed To CheckOut",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
-cartButton(BuildContext context) {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Row(
-      children: [
-        Expanded(
-          flex: 1,
-          child: StreamBuilder<QuerySnapshot>(
-            stream: Provider.of<FirebaseOperations>(context, listen: true)
-                .fetchCartData(context),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Container(
-                  width: 20,
-                  child: CircularProgressIndicator(),
-                );
-              }
-              return Text(
-                "Total: \n Rs.${snapshot.data.docs.length > 0 ? snapshot.data.docs.map((e) => e.data()["productQuantity"] * e.data()["productPrice"]).reduce((value, element) => value + element).toString() : "0"}",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              );
-            },
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.blue,
-            ),
-            height: 50,
-            width: MediaQuery.of(context).size.width,
-            child: Center(
-              child: Text(
-                "Proceed To CheckOut",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500),
-              ),
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
-}
+// snapshot.data.docs.length > 0 ? snapshot.data.docs.map((e) => e.data()["productQuantity"] * e.data()["productPrice"]).reduce((value, element) => value + element)
